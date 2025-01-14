@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { notification } from 'antd';
 import Empty from './pages/Empty';
+import HavetoLogin from './pages/HavetoLogin';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Detail from './pages/Detail';
@@ -26,6 +27,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Navigate to="layout/dashboard" />} />
         <Route path="empty" element={<Empty />} />
+        <Route path="havetologin" element={<HavetoLogin />} />
         <Route path="login" element={<Login data={data} setData={setData} />} />
         <Route path='layout' element={<Layout />}>
           <Route path='dashboard' element={<Dashboard data={data} setData={setData} />} />

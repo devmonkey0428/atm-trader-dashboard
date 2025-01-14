@@ -22,7 +22,11 @@ const Dashboard: React.FC<{ data: DashboardData[], setData: React.Dispatch<React
 		}
 		try {
 			if (!email) {
-				navigate('/login');
+				if (isEmbedded()) {
+					navigate('/havetologin');
+				} else {
+					navigate('/login');
+				}
 				return;
 			}
 			const response = await apiMain.post('/get_devices_list', { email: email });
