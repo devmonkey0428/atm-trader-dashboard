@@ -9,15 +9,19 @@ import moment from 'moment';
 import { DashboardData, RawAccountData, RawDeviceData } from '../types/DataTypes';
 import { isEmbedded } from '../utils/isEmbedded';
 
-interface MessageData {
-  type: string;
-  email: string;
-}
-
 const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.SetStateAction<DashboardData[]>> }> = ({ setData }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [emailFromParent, setEmailFromParent] = useState<string>('');
+
+
+  useEffect(() => {
+    const emailFromParentSite = localStorage.getItem('emailFromParentSite') || null;
+    if (isEmbedded() && emailFromParentSite) {
+      setEmailFromParent(emailFromParentSite);
+    }
+  }, [])
+
 
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -112,39 +116,15 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
     }
   }
 
-  useEffect(() => {
 
-    const savedEmail = localStorage.getItem('email');
-    if (savedEmail) {
-      navigate('/layout/dashboard');
-    }
-
-    const handleMessage = (event: MessageEvent<MessageData>) => {
-      console.log('message arrived from', event.origin)
-      if (event.origin === 'https://atmtrader.com') {
-        const { type, email } = event.data;
-        if (type === 'SEND_EMAIL') {
-          if (email) {
-            console.log('receved email from parent', email);
-            setEmailFromParent(email);
-          }
-        }
-      } else {
-        console.warn('Untrusted origin:', event.origin);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    // return () => {
-    //   window.removeEventListener('message', handleMessage);
-    // };
-  }, []);
 
   const handleLoginUsingFromParent = () => {
-    setEmail(emailFromParent);
-    handleLogin();
+    if (emailFromParent) {
+      setEmail(emailFromParent);
+      handleLogin();
+    }
   }
+
 
   if (isLoading) return <Loader />
 

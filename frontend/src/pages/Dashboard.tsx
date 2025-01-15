@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Collapse, CollapseProps, notification } from 'antd';
 import moment from 'moment';
 import apiMain from '../utils/apiMain';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Loader from './components/Loader';
 import { RawDeviceData, RawAccountData, DashboardData } from '../types/DataTypes';
 import DashboardTable from './components/DashboardTable';
@@ -11,11 +11,18 @@ import { isEmbedded } from '../utils/isEmbedded';
 
 const Dashboard: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.SetStateAction<DashboardData[]>> }> = ({ data, setData }) => {
 	const navigate = useNavigate();
-	// const location = useLocation();
-	// const email = isEmbedded() ? new URLSearchParams(location.search).get('email') || null : localStorage.getItem('email') || null;
+	const location = useLocation();
+	// isEmbedded() ? new URLSearchParams(location.search).get('email') || null : localStorage.getItem('email') || null;
 	const email = localStorage.getItem('email') || null;
 
+	useEffect(() => {
+		if (isEmbedded() && new URLSearchParams(location.search).get('email') !== null) {
+			localStorage.setItem('emailFromParentSite', new URLSearchParams(location.search).get('email') || '')
+		}
+	}, [])
+
 	const [isLoading, setisLoading] = useState<boolean>(false);
+
 
 	const getData = useCallback(async () => {
 		if (!data.length) {
