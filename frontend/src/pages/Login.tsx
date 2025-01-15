@@ -120,8 +120,8 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
     }
 
     const handleMessage = (event: MessageEvent<MessageData>) => {
+      console.log('message arrived from', event.origin)
       if (event.origin === 'https://atmtrader.com') {
-
         const { type, email } = event.data;
         if (type === 'SEND_EMAIL') {
           if (email) {
