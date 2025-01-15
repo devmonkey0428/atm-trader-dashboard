@@ -128,7 +128,7 @@ const DashboardTable: React.FC<{ data: DataType[] }> = ({ data }) => {
       key: 'name',
       ...getColumnSearchProps('name'),
       render: (name, record) => (
-        <Link to={`/layout/detail/${record.key}`} className='underline'>
+        <Link to={`/layout/detail/${record.key}/${record.oid}`} className='underline'>
           {name}
         </Link>
       ),

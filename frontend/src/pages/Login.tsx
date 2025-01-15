@@ -103,7 +103,6 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
       return;
     }
     localStorage.setItem('email', email);
-    // navigate('/layout/dashboard');
     getData();
   }
 
@@ -114,8 +113,15 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
   }
 
   useEffect(() => {
+
+    const savedEmail = localStorage.getItem('email');
+    if (savedEmail) {
+      navigate('/layout/dashboard');
+    }
+
     const handleMessage = (event: MessageEvent<MessageData>) => {
       if (event.origin === 'https://atmtrader.com') {
+
         const { type, email } = event.data;
         if (type === 'SEND_EMAIL') {
           if (email) {
@@ -130,9 +136,9 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
 
     window.addEventListener('message', handleMessage);
 
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
+    // return () => {
+    //   window.removeEventListener('message', handleMessage);
+    // };
   }, []);
 
   const handleLoginUsingFromParent = () => {
