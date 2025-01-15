@@ -89,7 +89,7 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
     }
   }, [navigate, setData]);
 
-  const handleLogin = () => {
+  const handleLogin = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       notification.warning({
@@ -112,16 +112,13 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
 
   const handleKeyupLogin = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleLogin();
+      handleLogin(email);
     }
   }
 
-
-
   const handleLoginUsingFromParent = () => {
     if (emailFromParent) {
-      setEmail(emailFromParent);
-      handleLogin();
+      handleLogin(emailFromParent);
     }
   }
 
@@ -134,11 +131,11 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
         <div className='flex flex-col gap-4 max-w-[300px] w-full mx-[20px]'>
           <img src={ImgLogo} alt='logo' className='w-[200px] mx-auto mb-[20px]' />
           <Input typeof='email' size='large' placeholder='Input your email' prefix={<UserOutlined />} value={email} onChange={handleInputEmail} onKeyUp={handleKeyupLogin} />
-          <Button type='primary' size='large' onClick={() => handleLogin()} >Login</Button>
+          <Button type='primary' size='large' onClick={() => handleLogin(email)} >Login</Button>
           {
             isEmbedded() && emailFromParent &&
             <div className='flex justify-end'>
-              <span onClick={() => { handleLoginUsingFromParent() }} className='text-[#026670] underline'>Login using current email</span>
+              <span onClick={() => { handleLoginUsingFromParent() }} className='text-[#026670] underline cursor-pointer'>Login using current email</span>
             </div>
           }
         </div>
