@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Input, Button, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
@@ -7,10 +7,17 @@ import Loader from './components/Loader';
 import apiMain from '../utils/apiMain';
 import moment from 'moment';
 import { DashboardData, RawAccountData, RawDeviceData } from '../types/DataTypes';
+import { isEmbedded } from '../utils/isEmbedded';
+
+interface MessageData {
+  type: string;
+  email: string;
+}
 
 const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.SetStateAction<DashboardData[]>> }> = ({ setData }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
+  const [emailFromParent, setEmailFromParent] = useState<string>('');
 
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -106,6 +113,32 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
     }
   }
 
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent<MessageData>) => {
+      if (event.origin === 'https://atmtrader.com') {
+        const { type, email } = event.data;
+        if (type === 'SEND_EMAIL') {
+          if (email) {
+            setEmailFromParent(email);
+          }
+        }
+      } else {
+        console.warn('Untrusted origin:', event.origin);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
+  const handleLoginUsingFromParent = () => {
+    setEmail(emailFromParent);
+    handleLogin();
+  }
+
   if (isLoading) return <Loader />
 
   return (
@@ -113,8 +146,14 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
       <div className='flex justify-center items-center h-screen'>
         <div className='flex flex-col gap-4 max-w-[300px] w-full mx-[20px]'>
           <img src={ImgLogo} alt='logo' className='w-[200px] mx-auto mb-[20px]' />
-          <Input typeof='email' size='large' placeholder='Input you email' prefix={<UserOutlined />} value={email} onChange={handleInputEmail} onKeyUp={handleKeyupLogin} />
+          <Input typeof='email' size='large' placeholder='Input your email' prefix={<UserOutlined />} value={email} onChange={handleInputEmail} onKeyUp={handleKeyupLogin} />
           <Button type='primary' size='large' onClick={() => handleLogin()} >Login</Button>
+          {
+            isEmbedded() && emailFromParent &&
+            <div className='flex justify-end'>
+              <span onClick={() => { handleLoginUsingFromParent() }} className='text-[#026670] underline'>Login using current email</span>
+            </div>
+          }
         </div>
       </div>
     </>

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import { Row, Col, Card } from 'antd';
 import apiMain from '../utils/apiMain';
@@ -9,11 +9,11 @@ import Loader from './components/Loader';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { DeviceInfo } from '../types/DataTypes';
-import { isEmbedded } from '../utils/isEmbedded';
+// import { isEmbedded } from '../utils/isEmbedded';
 
 const Detail: React.FC = () => {
 	const { id, oid } = useParams<{ id: string; oid: string; }>();
-	const location = useLocation();
+	// const location = useLocation();
 
 	const [info, setInfo] = useState<DeviceInfo | null>(null);
 	const [extraData, setExtraData] = useState<{monthlyRate: string, wirelessPlan: string}>({monthlyRate: '', wirelessPlan: ''});
@@ -49,7 +49,7 @@ const Detail: React.FC = () => {
 				info &&
 				<div className='p-[10px] md:p-[20px] flex flex-col gap-[20px] max-w-full'>
 					<div className='flex justify-start items-center gap-[20px] mb-[20px]'>
-						<Link to={`/layout/dashboard${isEmbedded() ? `?email=${new URLSearchParams(location.search).get('email')}` : ''}`}><ArrowLeftOutlined className='text-[#026670] text-2xl font-bold' /></Link>
+						<Link to={`/layout/dashboard`}><ArrowLeftOutlined className='text-[#026670] text-2xl font-bold' /></Link>
 						<h2 className='text-[#026670] text-2xl font-bold'>
 							{info.name || ''}
 						</h2>

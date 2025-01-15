@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Collapse, CollapseProps, notification } from 'antd';
 import moment from 'moment';
 import apiMain from '../utils/apiMain';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Loader from './components/Loader';
 import { RawDeviceData, RawAccountData, DashboardData } from '../types/DataTypes';
 import DashboardTable from './components/DashboardTable';
@@ -11,8 +11,9 @@ import { isEmbedded } from '../utils/isEmbedded';
 
 const Dashboard: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.SetStateAction<DashboardData[]>> }> = ({ data, setData }) => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const email = isEmbedded() ? new URLSearchParams(location.search).get('email') || null : localStorage.getItem('email') || null;
+	// const location = useLocation();
+	// const email = isEmbedded() ? new URLSearchParams(location.search).get('email') || null : localStorage.getItem('email') || null;
+	const email = localStorage.getItem('email') || null;
 
 	const [isLoading, setisLoading] = useState<boolean>(false);
 
@@ -22,11 +23,11 @@ const Dashboard: React.FC<{ data: DashboardData[], setData: React.Dispatch<React
 		}
 		try {
 			if (!email) {
-				if (isEmbedded()) {
-					navigate('/havetologin');
-				} else {
+				// if (isEmbedded()) {
+				// 	navigate('/havetologin');
+				// } else {
 					navigate('/login');
-				}
+				// }
 				return;
 			}
 			const response = await apiMain.post('/get_devices_list', { email: email });
@@ -96,7 +97,7 @@ const Dashboard: React.FC<{ data: DashboardData[], setData: React.Dispatch<React
 				return {
 					key: index,
 					label: <span className='underline text-[16px] font-bold' >{item.accountName}</span>,
-					children: <DashboardTable data={item.devices} email={email || ''} />
+					children: <DashboardTable data={item.devices} />
 				}
 			})
 		)

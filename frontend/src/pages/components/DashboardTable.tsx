@@ -7,11 +7,11 @@ import { DataType } from '../../types/DataTypes';
 import { TableProps } from 'antd/es/table';
 import { FilterFilled, SearchOutlined } from '@ant-design/icons';
 import { FilterValue } from 'antd/es/table/interface';
-import { isEmbedded } from '../../utils/isEmbedded';
+// import { isEmbedded } from '../../utils/isEmbedded';
 
 type DataIndex = keyof DataType;
 
-const DashboardTable: React.FC<{ data: DataType[], email: string }> = ({ data, email }) => {
+const DashboardTable: React.FC<{ data: DataType[] }> = ({ data }) => {
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
 
   const searchInput = useRef<InputRef>(null);
@@ -128,7 +128,7 @@ const DashboardTable: React.FC<{ data: DataType[], email: string }> = ({ data, e
       key: 'name',
       ...getColumnSearchProps('name'),
       render: (name, record) => (
-        <Link to={`/layout/detail/${record.key}/${record.oid}${isEmbedded() ? `?email=${email}` : ''}`} className='underline'>
+        <Link to={`/layout/detail/${record.key}`} className='underline'>
           {name}
         </Link>
       ),

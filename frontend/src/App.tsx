@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { notification } from 'antd';
 import Empty from './pages/Empty';
@@ -13,7 +13,29 @@ import { validateEmbedding } from './embedValidator';
 const App: React.FC = () => {
 
   const [data, setData] = useState<DashboardData[]>([]);
-  
+
+  useEffect(() => {
+    const sendHeightToParent = () => {
+      const height = document.body.scrollHeight;
+      window.parent.postMessage({ type: 'UPDATE_HEIGHT', height }, 'https://atmtrader.com');
+    };
+
+    // Observe height changes
+    const observer = new ResizeObserver(() => {
+      sendHeightToParent();
+    });
+
+    observer.observe(document.body);
+
+    // Send initial height
+    sendHeightToParent();
+
+    // Cleanup the observer on component unmount
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   notification.config({
     duration: 3,
   });
