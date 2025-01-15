@@ -119,6 +119,7 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
         const { type, email } = event.data;
         if (type === 'SEND_EMAIL') {
           if (email) {
+            console.log('receved email from parent', email);
             setEmailFromParent(email);
           }
         }
@@ -143,7 +144,7 @@ const Login: React.FC<{ data: DashboardData[], setData: React.Dispatch<React.Set
 
   return (
     <>
-      <div className='flex justify-center items-center h-screen'>
+      <div className='flex min-h-[500px] justify-center items-center h-screen'>
         <div className='flex flex-col gap-4 max-w-[300px] w-full mx-[20px]'>
           <img src={ImgLogo} alt='logo' className='w-[200px] mx-auto mb-[20px]' />
           <Input typeof='email' size='large' placeholder='Input your email' prefix={<UserOutlined />} value={email} onChange={handleInputEmail} onKeyUp={handleKeyupLogin} />
