@@ -15,19 +15,22 @@ const Header: React.FC = () => {
     navigate('/login');
   }
 
-  if (isEmbedded()) {
-    return null;
-  }
-
   return (
     <>
-      <div className='flex justify-between items-center p-[20px] bg-[#026670]'>
-        <Link className='w-[140px] md:w-auto' to='/'><img src={ImgLogo} alt='logo' /></Link>
+      <div className={`flex justify-between items-center ${isEmbedded() ? 'bg-transparent pt-[20px] pr-[35px] pb-[0px]' : 'bg-[#026670] p-[20px]'}`}>
+        {
+          isEmbedded() ? (
+            <div></div>
+          ) : (
+            <Link className='w-[140px] md:w-auto' to='/'><img src={ImgLogo} alt='logo' /></Link>
+          )
+        }
         <div className='flex'>
-          <span className='text-[#FFF] mr-[10px] text-[18px] hidden md:block' ><UserOutlined className='mr-[5px]' />{email}</span>
-          <Button type='primary' className='border-[#FFF]' onClick={() => handleLogout()} >Logout</Button>
+          <span className={`mr-[10px] text-[18px] hidden md:block ${isEmbedded() ? 'text-[#026670]' : 'text-[#FFF]'}`} ><UserOutlined className='mr-[5px]' />{email}</span>
+          <Button type='primary' className={`${!isEmbedded() && 'border-[#FFF]'}`} onClick={() => handleLogout()} >Logout</Button>
         </div>
       </div>
+
     </>
   );
 }
